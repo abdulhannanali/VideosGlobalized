@@ -1,0 +1,19 @@
+{
+  "name": "VideosGlobalized",
+  "homepage": "https://github.com/abdulhannanali/VideosGlobalized",
+  "authors": [
+    "Abdul Hannan Ali <abdulhannanali@outlook.com>"
+  ],
+  "description": "Let's you play and get an embedded code for videos from popular video sharing sites over a proxy.",
+  "main": "index.html",
+  "moduleType": [],
+  "license": "CC0 1.0 Universal",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
