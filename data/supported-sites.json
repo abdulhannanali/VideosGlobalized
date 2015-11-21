@@ -1,0 +1,32 @@
+[
+  {
+    "name":"Facebook",
+    "chipImage":"img/chipimages/facebook.png",
+    "siteLink":"https://facebook.com"
+  },
+  {
+    "name": "Youtube",
+    "chipImage":"img/chipimages/youtube.png",
+    "siteLink":"https://yahoo.com"
+  },
+  {
+    "name":"Vimeo",
+    "chipImage":"img/chipimages/vimeo.png",
+    "siteLink":"https://vimeo.com"
+  },
+  {
+    "name":"Yahoo",
+    "chipImage":"img/chipimages/yahoo.png",
+    "siteLink": "https://yahoo.com"
+  },
+  {
+    "name":"Twitter",
+    "chipImage":"img/chipimages/twitter.png",
+    "siteLink":"https://twitter.com"
+  },
+  {
+    "name":"VK",
+    "chipImage":"img/chipimages/vk.png",
+    "siteLink":"https://vk.com/"
+  }
+]

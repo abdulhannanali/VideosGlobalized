@@ -3,5 +3,9 @@
 }
 
 .chip {
-  margin: 0px 5px;
+  margin: 2px 5px;
+}
+
+#ringLoader {
+  margin-top: 100px;
 }
