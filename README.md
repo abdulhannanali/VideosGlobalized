@@ -1,5 +1,5 @@
 # VideosGlobalized
-**Demo:** videosglobalized.ga
+**Demo:** http://videosglobalized.ga
 
 VideosGlobalized is your one stop solution for all the video sharing site watching.
 You can access Youtube, Vimeo, Facebook videos etc. over this page. Just enter
