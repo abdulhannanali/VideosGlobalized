@@ -60,6 +60,9 @@ function  videoDisplayService($, videoDisplay) {
     // adding parameters - they'll be default for now and not changing
     link += "?title=1&byline=1&potrait=0";
 
+    // autoplay parameter
+    link += "&autoplay=" + autoplay;
+
     var iframe = $("<iframe>")
       .attr("src", link)
       .attr("frameborder", "0")

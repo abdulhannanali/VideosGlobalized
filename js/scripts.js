@@ -1,8 +1,5 @@
 //IIFE cos you never populate the global space
 (function(){
-  var baseUrl = "http://s.ytapi.com/embed/"
-  var baseYTUrl = "http://playit.pk/embed/*?logo=false&download=true"
-
   // an array of supported sites with their chip name and image location for their chip
   var supportedSites = [
     // {
@@ -34,12 +31,14 @@
 
   $(document).ready(function(){
     // first time autoplay switch
-    if (getAutoplayCookie() == "true") {
-      $("autoplaySwitch").prop("checked", true);
-    }
 
     $("#supportedVideoSites").prepend(supportSitesChips());
     serveVideo = videoDisplayService($, $("#videoDisplay"));
+
+    if (getAutoplayCookie() == "true") {
+      $("#autoplaySwitch").prop("checked", true);
+      setAutoplay(true, serveVideo);
+    }
 
     hideLoadingRing();
 
