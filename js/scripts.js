@@ -5,11 +5,11 @@
 
   // an array of supported sites with their chip name and image location for their chip
   var supportedSites = [
-    {
-      "name":"Facebook",
-      "chipImage":"img/chipimages/facebook.png",
-      "siteLink":"https://facebook.com"
-    },
+    // {
+    //   "name":"Facebook",
+    //   "chipImage":"img/chipimages/facebook.png",
+    //   "siteLink":"https://facebook.com"
+    // },
     {
       "name": "Youtube",
       "chipImage":"img/chipimages/youtube.png",
@@ -19,162 +19,82 @@
       "name":"Vimeo",
       "chipImage":"img/chipimages/vimeo.png",
       "siteLink":"https://vimeo.com"
-    },
-    {
-      "name":"Twitter",
-      "chipImage":"img/chipimages/twitter.png",
-      "siteLink":"https://twitter.com"
-    },
-    {
-      "name":"VK",
-      "chipImage":"img/chipimages/vk.png",
-      "siteLink":"https://vk.com/"
     }
+    // {
+    //   "name":"Twitter",
+    //   "chipImage":"img/chipimages/twitter.png",
+    //   "siteLink":"https://twitter.com"
+    // },
+    // {
+    //   "name":"VK",
+    //   "chipImage":"img/chipimages/vk.png",
+    //   "siteLink":"https://vk.com/"
+    // }
   ];
 
-  function checkAutoplayCookie () {
-    var autoplay = Cookies.get("autoplay");
-    if (autoPlay == 1) {
-      $("#autoplaySwitch").prop("checked", true);
-    }
-  }
-
   $(document).ready(function(){
+    // first time autoplay switch
+    if (getAutoplayCookie() == "true") {
+      $("autoplaySwitch").prop("checked", true);
+    }
+
     $("#supportedVideoSites").prepend(supportSitesChips());
+    serveVideo = videoDisplayService($, $("#videoDisplay"));
+
     hideLoadingRing();
+
     // event listener on search bar
     var previousSearch = "";
     var currentSearch = "";
+
     $("#search").focusout(function(){
+      hideErrorBox();
       currentSearch = $(this).val();
       if (previousSearch != currentSearch && currentSearch != "") {
-        $("#videoFrame").hide();
         previousSearch = currentSearch;
-        setFrameUrl(currentSearch);
+
+        var videoSite = serveVideo.checkVideoSite(currentSearch);
+
+        $("#videoDisplay").hide();
+        setRingColor(videoSite);
+        colorizeChip(videoSite);
+        showLoadingRing();
+
+
+        serveVideo.setVideoDisplay(currentSearch, function (err) {
+          hideLoadingRing();
+          if (err) {
+            showErrorBox("Video was not found!", "Sorry the video on the following link was not found!");
+          }
+          else {
+            $("#videoDisplay").show();
+          }
+        });
       }
     });
 
-
-    $("#videoFrame").load(function() {
-      hideLoadingRing();
-      $("#videoFrame").show();
+    $("#autoplaySwitch").change(function(){
+      var checked = $(this).prop("checked");
+      setAutoplay(checked, serveVideo);
     })
 
   });
 
-  function getVideoId(videoUrl, site) {
-    switch (checkVideoSite(videoUrl)) {
-      case "vimeo":
-        return getVimeoId(videoUrl);
-      case "facebook":
-        return getFacebookId(videoUrl);
-      case "vk":
-        return getVKId(videoUrl);
-      case "twitter":
-        return getTwitterId(videoUrl);
-      default:
-      case "youtube":
-        return getYoutubeId(videoUrl);
-        break;
+  function showErrorBox (title, message) {
+    if (title) {
+      $("#errorBoxTitle").text(title);
     }
+    if (message) {
+      $("#errorBoxMessage").text(message);
+    }
+
+    $("#errorBox").show();
   }
 
-  function checkVideoSite (videoUrl) {
-
-    var hostname = url("hostname", videoUrl);
-    var vimeoTest = /vimeo.com/
-    var facebookTest = /facebook.com/
-    var vkTest = /vk.com/
-    var twitterTest = /twitter.com/
-    var youtubeTest = /youtube.com/
-
-    if (vimeoTest.test(hostname)) {
-      return "vimeo";
-    }
-    else if (facebookTest.test(hostname)) {
-      return "facebook";
-    }
-    else if (vkTest.test(hostname)) {
-      return "vk";
-    }
-    else if (twitterTest.test(hostname)) {
-      return "twitter";
-    }
-    else if(youtubeTest.test(hostname)) {
-      return "youtube";
-    }
+  function hideErrorBox () {
+    $("#errorBox").hide();
   }
 
-  // set the url of the iframe to load the video
-  function setFrameUrl(videoLink) {
-    var videoSite = checkVideoSite(videoLink);
-
-    // sets the color and shows the loading ring
-    setRingColor(videoSite);
-    showLoadingRing();
-
-    var videoId = getVideoId(videoLink);
-
-    colorizeChip(videoSite);
-
-    if (videoSite != "youtube") {
-      var link = baseUrl + videoId;
-    }
-    else {
-      var link = baseYTUrl.replace("*", videoId);
-    }
-
-    // first query element check if first one in the link and
-    // use ? or & accordingly
-    if (link.indexOf("?") != -1) {
-      link += "&";
-    }
-    else {
-      link += "?";
-    }
-
-    // autoplay on or off
-    link += "autoplay=" + (isAuto() ? "1":"0");
-    console.log(link);
-    $("#videoFrame").attr("src", link);
-  }
-
-  function getVimeoId(videoUrl) {
-    var prefix = "vm";
-
-    var id = url("path", videoUrl).split("/").pop();
-
-    return idPrefixer(prefix, id);
-  }
-
-  function getFacebookId(videoUrl) {
-    var prefix = "fb";
-    var id = url("path", videoUrl).split("/").pop();
-
-    return idPrefixer(prefix, id);
-  }
-
-  function getVKId(videoUrl) {
-    var prefix = "vk";
-    var id = url("?", videoUrl).z.match(/video([-][0-9]*_[0-9]*)/)[1];
-    return idPrefixer(prefix, id);
-  }
-
-  function getTwitterId(videoUrl) {
-    var prefix = "tw";
-    var id = url("path", videoUrl).split("/").pop();
-    return idPrefixer(prefix, id);
-  }
-
-  function getYoutubeId(videoUrl) {
-    var id = url("?",videoUrl).v;
-    return id;
-  }
-
-
-  function idPrefixer(prefix, id) {
-    return prefix + "." + id;
-  }
 
   function supportSitesChips () {
     var chips = [];
@@ -208,11 +128,14 @@
   // according to the sites color given here
   function colorizeChip(site) {
     // removing all the colors from chips first
-    $("#facebookChip").removeClass("blue white-text");
-    $("#twitterChip").removeClass("light-blue white-text");
-    $("#vkChip").removeClass("white blue-text");
-    $("#vimeoChip").removeClass("white cyan-text");
-    $("#youtubeChip").removeClass("white red-text");
+    $("#supportedVideoSites").children().each(function(index, elem) {
+      $(elem).attr("class").split(" ").forEach(function(value, index, array) {
+        if (value != "chip") {
+          $(elem).removeClass(value);
+        }
+      })
+    });
+
     switch (site) {
       case "facebook":
         $("#facebookChip")
@@ -292,8 +215,18 @@
     spinner.show();
   }
 
-  function isAuto() {
-    return $("#autoplaySwitch").prop("checked");
+  function setAutoplay (autoplay, serveVideo) {
+    serveVideo.setAutoplay(autoplay);
+    setAutoplayCookie(autoplay);
   }
+
+  function setAutoplayCookie (autoplay) {
+    Cookies.set("autoplay", autoplay, {expires: 10});
+  }
+
+  function getAutoplayCookie () {
+    return Cookies.get("autoplay");
+  }
+
 
 }());

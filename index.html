@@ -75,10 +75,24 @@
           </div>
         </div>
       </div>
+
+      <!-- error box -->
+      <div class="row" id="errorBox" style="display:none;">
+        <div class="col s12">
+          <div class="card red">
+            <div class="card-content white-text">
+              <span class="card-title" id="errorBoxTitle"></span>
+              <p id="errorBoxMessage">
+
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- video container -->
       <div class="row">
-        <div class="video-container">
-          <iframe id="videoFrame" src="http://s.ytapi.com/embed/vm.145849050?autoplay=0" width="100%" height="100%" frameborder="0" allowfullscreen scrolling="no" seamless="seamless"></iframe>
+        <div class="video-container animated bounceInUp" id="videoDisplay">
         </div>
       </div>
 
@@ -89,6 +103,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-url/2.0.2/url.min.js"></script>
     <Script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.0.4/js.cookie.min.js"></script>
     <!-- my scripts -->
+    <script src="js/getVideo.js"></script>
     <script src="js/scripts.js"></script>
   </body>
 </html>
